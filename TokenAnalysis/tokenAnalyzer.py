@@ -1,4 +1,4 @@
-filename = "p1.c" #input("Enter filename: ")
+filename = "TokenAnalysis/p1.c" #input("Enter filename: ")
 prog = open(filename)
 
 whiteSpace = [" ", "\n", "\t", "\v", "\r", "\f"]
@@ -91,6 +91,7 @@ for token in tokens_list:
         no_identifiers += 1
 
 print("\n--- Details ---\n")
+print("Tokens       :", len(tokens_list))
 print("Identifiers  :", no_identifiers)
 print("Keywords     :", no_keywords)
 print("Separators   :", no_separators)
