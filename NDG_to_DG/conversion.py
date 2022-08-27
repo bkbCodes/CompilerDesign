@@ -23,8 +23,7 @@ for line in file:
     productions[current_symbol] = rules
 
     # print the production and its length
-    print(productions[current_symbol])
-    print(len(productions[current_symbol]))
+    print(current_symbol,productions[current_symbol])
 
 
 # getting Start Symbol of the grammar
