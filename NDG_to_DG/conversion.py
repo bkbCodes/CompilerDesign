@@ -100,3 +100,4 @@ while productions != initial_productions and loop < 5:
 
 for i in productions:
     print(i +"\t", productions[i])
+    
