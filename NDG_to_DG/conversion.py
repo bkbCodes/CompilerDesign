@@ -4,10 +4,10 @@
 filename = "NDG_to_DG/Grammar"    # file to be read
 file = open(filename)   # open the specified file and read the Grammar
 productions = {}        # store produtions rules {symbols: rules} eg. A->a/b is stored as {"A":["a","b"]}
-symbols = []            # variable ie non terminal symbols
-terminals = []          # terminals
+symbols = set()            # variable ie non terminal symbols
+terminals = set()          # terminals
 startSymbol = ""
-
+maxlen = 0
 
 # getting Production rules
 for line in file:
@@ -18,10 +18,11 @@ for line in file:
     if startSymbol == "":
         startSymbol = current_symbol
 
+    [terminals.add(i) if (i>='a' and i<='z') or ord(i)-ord('a') in [range(10)] else "" for i in production[1]]
     rules = production[1].split("\n")[0].split('/')
-    symbols.append(current_symbol)
+    symbols.add(current_symbol)
     productions[current_symbol] = rules
-
+    maxlen = max(maxlen, max([len(i) for i in rules]))
     # print the production and its length
     print(current_symbol,productions[current_symbol])
 
@@ -32,39 +33,53 @@ if startSymbol not in symbols:
     raise Exception(ValueError("Invalid Start Symbol"))
 
 
-print(productions, startSymbol, symbols)
+print(productions, startSymbol, symbols, terminals)
+newSymbols = set()
+first = 1
+ignoreList = []
 
-
-for s in symbols:
-    # if symbol 's' has only 1 rule the skip to next symbol
-    if len(productions[s]) < 2:
-        continue
-
-    j=1
-    # get the prodution that is common in rules
-    common = productions[s][0][:j]
-
-    # create new symbol s' for new productions
-    newSymbol = s+"'"
-    symbols.append(newSymbol)
-    productions[newSymbol] = []
-    popInds = []
-
-    for prodNo in range(len(productions[s])):
-        prod = productions[s][prodNo]
-        if prod == None:
+while newSymbols != set() or first == 1 or first<=maxlen+1:
+    first += 1
+    newSymbols = set(())
+    for s in symbols:
+        if s[0] in ignoreList:
             continue
-        if common == prod[:j]:
-            if len(prod) <2:
-                productions[newSymbol].append(None)
-            else:
-                productions[newSymbol].append(prod[j:])
-            popInds.append(prodNo)
-    
-    productions[s].append(common+newSymbol)
+        # if symbol 's' has only 1 rule the skip to next symbol
+        if len(productions[s]) < 2:
+            if productions[s][0] == None:
+                ignoreList.append(s[0])
+            continue
+        
+        j=1
+        # get the prodution that is common in rules
+        ind = 0
+        while productions[s][ind] == None:
+            ind += 1
+        common = productions[s][ind][:j]
 
-    for i in range(len(popInds)):
-        productions[s].pop(popInds[i] - i)
+        # create new symbol s' for new productions
+        newSymbol = s+"'"
+        newSymbols.add(newSymbol)
+        productions[newSymbol] = []
+        popInds = []
+
+        for prodNo in range(len(productions[s])):
+            prod = productions[s][prodNo]
+            if prod == None:
+                continue
+            if common == prod[:j]:
+                if len(prod) <2:
+                    productions[newSymbol].append(None)
+                else:
+                    productions[newSymbol].append(prod[j:])
+                popInds.append(prodNo)
+        
+        productions[s].append(common+newSymbol)
+
+        for i in range(len(popInds)):
+            productions[s].pop(popInds[i] - i)
+    symbols = symbols.union(newSymbols)
+    print(newSymbols, len(newSymbols), symbols)
 
 
 for i in productions:
