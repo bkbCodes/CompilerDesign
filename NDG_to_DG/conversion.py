@@ -86,7 +86,6 @@ while (newSymbols != set() or first == 1) and initial_productions != productions
         for i in range(len(popInds)):
             productions[s].pop(popInds[i] - i)
     symbols = symbols.union(newSymbols)
-    print(productions)
 
 
 print("Deterministic Grammar:")
