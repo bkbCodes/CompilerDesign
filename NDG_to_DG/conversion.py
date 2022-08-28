@@ -10,6 +10,7 @@ startSymbol = ""
 maxlen = 0
 
 # getting Production rules
+print("Given Grammar:")
 for line in file:
     production = line.split("->")
     current_symbol = production[0]
@@ -22,7 +23,12 @@ for line in file:
     rules = production[1].split("\n")[0].split('/')
     symbols.add(current_symbol)
     productions[current_symbol] = rules
-    maxlen = max(maxlen, max([len(i) for i in rules]))
+    
+    for i in range(len(rules)):
+        if rules[i] == "epsilon" or rules[i] == "":
+            rules[i] = None
+
+    maxlen = max(maxlen, max([len(i) if i != None else 0 for i in rules]))
     # print the production and its length
     print(current_symbol,productions[current_symbol])
 
@@ -33,14 +39,15 @@ if startSymbol not in symbols:
     raise Exception(ValueError("Invalid Start Symbol"))
 
 
-print(productions, startSymbol, symbols, terminals)
 newSymbols = set()
 first = 1
 ignoreList = []
+initial_productions = []
 
-while newSymbols != set() or first == 1 or first<=maxlen+1:
+while (newSymbols != set() or first == 1) and initial_productions != productions:
     first += 1
     newSymbols = set(())
+    initial_productions = productions.copy()
     for s in symbols:
         if s[0] in ignoreList:
             continue
@@ -79,8 +86,9 @@ while newSymbols != set() or first == 1 or first<=maxlen+1:
         for i in range(len(popInds)):
             productions[s].pop(popInds[i] - i)
     symbols = symbols.union(newSymbols)
-    print(newSymbols, len(newSymbols), symbols)
+    print(productions)
 
 
+print("Deterministic Grammar:")
 for i in productions:
     print(i +"\t", productions[i])
