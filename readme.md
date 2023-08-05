@@ -1,9 +1,9 @@
 # Compiler Design Code
-Done/in progress Programs:
-1) Comment Elimination ✅
-2) Token Analysis ✅
-3) Non Deterministic Grammar to Deterministic Grammar ✅
-4) Expression evaluation involving operators: +, -, *, / and ↑. 🔨
+Implemented:
+- Comment Elimination
+- Token Analysis
+- Non Deterministic Grammar to Deterministic Grammar
 
-Remaining Programs (non-exhaustive list):
-1) Creating First and Follow set of LL(1) Grammar
+Working:
+- Expression evaluation involving operators: +, -, *, / and ↑.
+- Creating First and Follow set of LL(1) Grammar
